@@ -4,7 +4,7 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-        maven {
+        /*maven {
             name = 'MinecraftForge'
             url = 'https://maven.minecraftforge.net/'
         }
@@ -15,7 +15,7 @@ pluginManagement {
                 includeGroup('org.spongepowered.gradle.vanilla')
                 includeGroup('org.spongepowered')
             }
-        }
+        }*/
         mavenCentral()
         gradlePluginPortal()
     }

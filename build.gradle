@@ -1,58 +1,36 @@
 plugins {
-    id 'java-library'
+    id 'java'
+    id 'fabric-loom' version '0.12-SNAPSHOT' apply false
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
-
-shadowJar {
-    archiveBaseName.set('NegativityFabric')
-    archiveClassifier.set(null)
-    
-    mergeServiceFiles()
-}
-
-
-build.dependsOn shadowJar
 
 tasks.named('javadoc') {
     enabled false
 }
 
+group = 'com.elikill58'
+
 subprojects {
     apply plugin: 'java-library'
 
-    group = 'com.elikill58'
-
     repositories {
         mavenCentral()
-        maven {
-            name 'jitpack'
-            url 'https://jitpack.io/'
-        }
-        maven {
-            name 'codemc'
-            url 'https://repo.codemc.org/repository/maven-public/'
-        }
-        maven {
-            name 'Sonatype'
-            url 'https://oss.sonatype.org/content/groups/public/'
-        }
         maven {
             name 'eliapp'
             url 'https://repo.eliapp.fr:8081/repository/internal/'
         }
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
             name = 'MinecraftForge'
             url = 'https://maven.minecraftforge.net/'
         }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
     }
-
+    
     dependencies {
-        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
-        compileOnly 'org.checkerframework:checker-qual:3.7.0'
+        implementation "com.elikill58:Negativity:2.5"
     }
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(8)
