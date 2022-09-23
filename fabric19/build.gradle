@@ -15,14 +15,14 @@ sourceSets {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-archivesBaseName = 'Negativity'
+archivesBaseName = 'NegativityFabric'
 
 loom {
     serverOnlyMinecraftJar()
 }
 
 dependencies {
-    api "com.elikill58:Negativity:2.5"
+    compileOnly "com.elikill58:Negativity:2.5"
 
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -35,7 +35,7 @@ dependencies {
 }
 
 compileJava.javaCompiler.set(
-        javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(17) }
+    javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(17) }
 )
 
 processResources {
@@ -65,11 +65,9 @@ java {
 }
 
 shadowJar {
-    archiveBaseName.set('negativity')
-    archiveAppendix.set('fabric')
+    archiveBaseName.set('negativityfabric')
+    archiveAppendix.set('19')
     archiveClassifier.set('dev')
-
-    mergeServiceFiles()
 
     exclude('dummyThing')
     exclude('mappings/*')
@@ -79,8 +77,8 @@ shadowJar {
 
 task remapShadowJar(type: RemapJarTask) {
     dependsOn shadowJar
-    archiveBaseName.set('negativity')
-    archiveAppendix.set('fabric')
+    archiveBaseName.set('negativityfabric')
+    archiveAppendix.set('19')
     inputFile.set(shadowJar.archiveFile)
     destinationDirectory.set(layout.buildDirectory.dir('libs'))
 }
@@ -94,7 +92,7 @@ parent.tasks.named('shadowJar', ShadowJar) {
 
 task prepareServer(type: Copy) {
     from remapShadowJar.outputs
-    rename { 'negativity.jar' }
+    rename { 'negativityfabric.jar' }
     def pluginDir = System.getProperty('plugins.dir')
     if (pluginDir == null) {
         enabled(false)
