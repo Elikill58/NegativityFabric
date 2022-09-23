@@ -1,0 +1,81 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+shadowJar {
+    archiveBaseName.set('NegativityFabric')
+    archiveClassifier.set(null)
+    
+    mergeServiceFiles()
+}
+
+
+task prepareServer(type: Copy) {
+    from shadowJar.outputs
+    def pluginRename = System.getProperty('plugins.rename')
+    if(pluginRename == null || pluginRename.toBoolean()) {
+    	rename { 'NegativityFabric.jar' }
+    }
+    def pluginDir = System.getProperty('plugins.dir')
+    if (pluginDir == null) {
+        enabled(false)
+    } else {
+        into pluginDir
+    }
+}
+
+build.dependsOn shadowJar
+
+tasks.named('javadoc') {
+    enabled false
+}
+
+subprojects {
+    apply plugin: 'java-library'
+
+    group = 'com.elikill58'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name 'jitpack'
+            url 'https://jitpack.io/'
+        }
+        maven {
+            name 'codemc'
+            url 'https://repo.codemc.org/repository/maven-public/'
+        }
+        maven {
+            name 'Sonatype'
+            url 'https://oss.sonatype.org/content/groups/public/'
+        }
+        maven {
+            name 'eliapp'
+            url 'https://repo.eliapp.fr:8081/repository/internal/'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+    }
+
+    dependencies {
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+        compileOnly 'org.checkerframework:checker-qual:3.7.0'
+    }
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(ProcessResources) {
+        filteringCharset = 'UTF-8'
+    }
+}

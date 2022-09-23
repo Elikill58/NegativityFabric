@@ -1,0 +1,16 @@
+/*
+
+!/.github/
+!/.gitattributes
+!/.gitignore
+
+!/gradle/
+!/gradlew
+!/gradlew.bat
+!/build.gradle
+!/settings.gradle
+!/gradle.properties
+
+!/README.md
+
+!/fabric*/

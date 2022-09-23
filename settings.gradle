@@ -1,0 +1,26 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/repository/maven-snapshots/'
+            content {
+                includeGroup('org.spongepowered.gradle.vanilla')
+                includeGroup('org.spongepowered')
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'NegativityFabric'
+
+include 'fabric19', 'fabric192'
