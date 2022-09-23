@@ -89,14 +89,3 @@ parent.tasks.named('shadowJar', ShadowJar) {
     it.from(remapShadowJar.outputs)
     it.manifest.inheritFrom(tasks.jar.manifest)
 }
-
-task prepareServer(type: Copy) {
-    from remapShadowJar.outputs
-    rename { 'negativityfabric.jar' }
-    def pluginDir = System.getProperty('plugins.dir')
-    if (pluginDir == null) {
-        enabled(false)
-    } else {
-        into pluginDir
-    }
-}

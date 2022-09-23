@@ -11,20 +11,6 @@ shadowJar {
 }
 
 
-task prepareServer(type: Copy) {
-    from shadowJar.outputs
-    def pluginRename = System.getProperty('plugins.rename')
-    if(pluginRename == null || pluginRename.toBoolean()) {
-    	rename { 'NegativityFabric.jar' }
-    }
-    def pluginDir = System.getProperty('plugins.dir')
-    if (pluginDir == null) {
-        enabled(false)
-    } else {
-        into pluginDir
-    }
-}
-
 build.dependsOn shadowJar
 
 tasks.named('javadoc') {
