@@ -1,9 +1,5 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.fabricmc.loom.task.RemapJarTask
-
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 sourceSets {
@@ -15,6 +11,8 @@ sourceSets {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+archivesBaseName = 'NegativityFabric-19'
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -23,12 +21,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-screen-handler-api-v1:${project.fabric_version}"
 
-    implementation 'io.netty:netty-all:4.1.79.Final'
+    compileOnly 'io.netty:netty-all:4.1.79.Final'
 }
-
-compileJava.javaCompiler.set(
-    javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(17) }
-)
 
 processResources {
     def props = [
@@ -44,38 +38,6 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
-}
-
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
-}
-
-shadowJar {
-    archiveBaseName.set('negativityfabric')
-    archiveAppendix.set('19')
-    archiveClassifier.set('dev')
-
-    exclude('dummyThing')
-    exclude('mappings/*')
-
-    destinationDirectory.set(layout.buildDirectory.dir('devlibs'))
-}
-
-task remapShadowJar(type: RemapJarTask) {
-    dependsOn shadowJar
-    inputFile.set(shadowJar.archiveFile)
-    destinationDirectory.set(layout.buildDirectory.dir('libs'))
-}
-
-build.dependsOn remapShadowJar
-
-parent.tasks.named('shadowJar', ShadowJar) {
-    it.from(remapShadowJar.outputs)
-    it.manifest.inheritFrom(tasks.jar.manifest)
 }
