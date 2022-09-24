@@ -1,4 +1,4 @@
-name: build
+name: Build
 on: [ pull_request, push ]
 
 jobs:
@@ -23,7 +23,12 @@ jobs:
         run: chmod +x gradlew
       - name: build
         run: ./gradlew build
+      # this part will change
       - uses: actions/upload-artifact@v3
         with:
-          name: Artifacts
-          path: fabric*/build/libs/*.jar
+          name: NegativityFabric-1.19
+          path: fabric19/build/libs/NegativityFabric-19-1.0.0.jar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: NegativityFabric-1.19.2
+          path: fabric192/build/libs/NegativityFabric-19.2-1.0.0.jar
