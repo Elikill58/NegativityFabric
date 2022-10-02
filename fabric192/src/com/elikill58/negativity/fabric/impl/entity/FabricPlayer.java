@@ -98,7 +98,7 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 	
 	@Override
 	public boolean hasLineOfSight(Entity entity) {
-		return LocationUtils.hasLineOfSight(this.entity, ((net.minecraft.entity.Entity) entity.getDefault()).getPos());
+		return LocationUtils.hasLineOfSight(this.entity, this.entity.getWorld(), ((net.minecraft.entity.Entity) entity.getDefault()).getPos());
 	}
 
 	@Override

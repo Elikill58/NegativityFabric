@@ -18,6 +18,7 @@ import com.elikill58.negativity.api.events.channel.GameChannelNegativityMessageE
 import com.elikill58.negativity.api.yaml.Configuration;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.entity.FabricPlayer;
+import com.elikill58.negativity.fabric.impl.location.FabricWorld;
 import com.elikill58.negativity.fabric.listeners.CommandsExecutorManager;
 import com.elikill58.negativity.fabric.listeners.PlayersListeners;
 import com.elikill58.negativity.fabric.packets.NegativityPacketManager;
@@ -105,6 +106,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public void onGameStart(MinecraftServer srv) {
 		this.server = srv;
+		GlobalFabricNegativity.load(srv, FabricEntityManager::getExecutor, FabricWorld::new);
 		Negativity.loadNegativity();
 		packetManager = new NegativityPacketManager(this);
 
