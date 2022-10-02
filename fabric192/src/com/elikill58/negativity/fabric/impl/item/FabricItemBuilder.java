@@ -35,7 +35,7 @@ public class FabricItemBuilder extends ItemBuilder {
 	
 	public FabricItemBuilder(OfflinePlayer owner) {
 		this.item = new net.minecraft.item.ItemStack(Items.SKELETON_SKULL);
-		item.getOrCreateNbt().put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), new GameProfile(owner.getUniqueId(), null)));
+		item.getOrCreateNbt().put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), new GameProfile(owner.getUniqueId(), owner.getName())));
 	}
 
 	@Override
