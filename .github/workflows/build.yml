@@ -23,12 +23,55 @@ jobs:
         run: chmod +x gradlew
       - name: build
         run: ./gradlew build
-      # this part will change
-      - uses: actions/upload-artifact@v3
+      
+      # Upload part
+      - uses: actions/setup-node@v3
         with:
-          name: NegativityFabric-1.19
-          path: fabric19/build/libs/NegativityFabric-19-1.0.0.jar
-      - uses: actions/upload-artifact@v3
+          node-version: 16
+      - name: Install NPM package
+        run: npm install @actions/artifact
+      - uses: actions/github-script@v6
+        name: Artifact script
         with:
-          name: NegativityFabric-1.19.2
-          path: fabric192/build/libs/NegativityFabric-19.2-1.0.0.jar
+          script: |
+            let artifact = require('@actions/artifact');
+            const fs = require('fs');
+
+            function getContentFrom(path, check) {
+              return fs.readdirSync(path).filter(function (file) {
+                return check == fs.statSync(path+'/'+file).isDirectory();
+              });
+            }
+
+            function getDirectories(path) { return getContentFrom(path, true); }
+
+            function getFiles(path) { return getContentFrom(path, false); }
+
+            const artifactClient = artifact.create();
+
+            for(let fabricVersion of getDirectories("./")) {
+              if(!fabricVersion.startsWith("fabric"))
+                 continue;
+              console.log("Checking for version", fabricVersion);
+              let visual = "";
+              for(let char of fabricVersion.replace("fabric", "")) {
+                if(visual.length > 0 && visual.length % 2 == 0) {
+                  visual += ".";
+                }
+                visual += char;
+              }
+              let filesDir = "./" + fabricVersion + "/build/libs";
+              let files = [];
+              for(let build of getFiles(filesDir)) {
+                if(!build.endsWith("-sources.jar")) {
+                  files.push(filesDir + "/" + build);
+                }
+              }
+              console.log("Uploading version", "1." + visual, "and files", files);
+              await artifactClient.uploadArtifact(
+                "NegativityFabric 1." + visual,
+                files,
+                filesDir,
+                { continueOnError: false }
+              )
+            }
