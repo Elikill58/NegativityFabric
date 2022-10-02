@@ -105,9 +105,10 @@ public class Fabric_1_19 extends FabricVersionAdapter {
 				(p, f) -> new NPacketPlayInKeepAlive(((KeepAliveC2SPacket) f).getId()));
 		packetsPlayIn.put(getNameOfPacket(PlayerInteractEntityC2SPacket.class), (pa, f) -> {
 			PlayerInteractEntityC2SPacket p = (PlayerInteractEntityC2SPacket) f;
-			Object action = get(f, "type");
-			EnumEntityUseAction useAction = action == null ? EnumEntityUseAction.ATTACK : EnumEntityUseAction.valueOf(((Enum<?>) getFromMethod(action, "getType")).name());
-			return new NPacketPlayInUseEntity(p.getEntity(pa.getWorld()).getId(), new Vector(0, 0, 0), useAction);
+			Object action = get(f, "field_12871");
+			Enum<?> actionType = getFromMethod(action, "method_34211");
+			return new NPacketPlayInUseEntity(p.getEntity(pa.getWorld()).getId(), new Vector(0, 0, 0),
+					EnumEntityUseAction.valueOf(actionType.name()));
 		});
 		packetsPlayIn.put(getNameOfPacket(ClientCommandC2SPacket.class), (p, f) -> {
 			ClientCommandC2SPacket packet = (ClientCommandC2SPacket) f;
