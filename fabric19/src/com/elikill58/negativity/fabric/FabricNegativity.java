@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,6 @@ import com.elikill58.negativity.api.events.channel.GameChannelNegativityMessageE
 import com.elikill58.negativity.api.yaml.Configuration;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.entity.FabricPlayer;
-import com.elikill58.negativity.fabric.impl.location.FabricWorld;
 import com.elikill58.negativity.fabric.listeners.CommandsExecutorManager;
 import com.elikill58.negativity.fabric.listeners.PlayersListeners;
 import com.elikill58.negativity.fabric.packets.NegativityPacketManager;
@@ -106,7 +107,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public void onGameStart(MinecraftServer srv) {
 		this.server = srv;
-		GlobalFabricNegativity.load(srv, FabricEntityManager::getExecutor, FabricWorld::new);
+		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor);
 		Negativity.loadNegativity();
 		packetManager = new NegativityPacketManager(this);
 
@@ -222,7 +223,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 	}
 
 	public static void sendPluginMessage(byte[] rawMessage) {
-		ServerPlayerEntity player = Utils.getFirstOnlinePlayer();
+		ServerPlayerEntity player = getFirstOnlinePlayer();
 		if (player != null) {
 			PacketByteBuf buf = PacketByteBufs.create();
 			buf.writeBytes(rawMessage);
@@ -231,6 +232,12 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 			Adapter.getAdapter().getLogger()
 					.error("Could not send plugin message to proxy because there are no player online.");
 		}
+	}
+	
+	@Nullable
+	public static ServerPlayerEntity getFirstOnlinePlayer() {
+		Collection<ServerPlayerEntity> onlinePlayers = getInstance().getServer().getPlayerManager().getPlayerList();
+		return onlinePlayers.isEmpty() ? null : onlinePlayers.iterator().next();
 	}
 
 	private static class FmlRawDataListener implements PlayChannelHandler {
