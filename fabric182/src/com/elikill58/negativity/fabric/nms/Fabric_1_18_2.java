@@ -60,10 +60,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class Fabric_1_19 extends FabricVersionAdapter {
+public class Fabric_1_18_2 extends FabricVersionAdapter {
 
-	public Fabric_1_19() {
-		super("v1_19");
+	public Fabric_1_18_2() {
+		super("v1_18_2");
 		packetsPlayIn.put(getNameOfPacket(PlayerActionC2SPacket.class), (p, packet) -> {
 			PlayerActionC2SPacket blockDig = (PlayerActionC2SPacket) packet;
 			BlockPos pos = blockDig.getPos();
