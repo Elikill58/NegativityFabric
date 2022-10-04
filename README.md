@@ -9,5 +9,6 @@ You should choose which versions you need, and download jar [here](https://githu
 Versions supported:
 - 1.19.2
 - 1.19
+- 1.18.2
 
 Works only with `Negativity` (v2.5.1 and newer).
