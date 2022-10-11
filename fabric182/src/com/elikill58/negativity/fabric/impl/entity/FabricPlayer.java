@@ -223,8 +223,7 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 
 	@Override
 	public boolean isUsingRiptide() {
-		// TODO implement riptide for sponge
-		return false;
+		return entity.isUsingRiptide();
 	}
 	
 	@Override
