@@ -103,7 +103,7 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 
 	@Override
 	public float getWalkSpeed() {
-		return entity.getAbilities().getWalkSpeed() * 2.0f;
+		return entity.getAbilities().getWalkSpeed();
 	}
 
 	@Override
@@ -300,7 +300,7 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 
 	@Override
 	public float getFlySpeed() {
-		return entity.getAbilities().getFlySpeed() * 2.0f;
+		return entity.getAbilities().getFlySpeed();
 	}
 
 	@Override
