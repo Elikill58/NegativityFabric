@@ -25,7 +25,7 @@ subprojects {
     }
     
     dependencies {
-        compileOnly "com.elikill58:Negativity:2.5.1-SNAPSHOT"
+        compileOnly "com.elikill58:Negativity:2.5.1"
     }
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(8)
