@@ -151,7 +151,8 @@ public class FabricAdapter extends Adapter {
 
 	@Override
 	public double[] getTPS() {
-		long[] ltps = plugin.getServer().getMetricsData().getSamples();
+		@SuppressWarnings("resource")
+		long[] ltps = plugin.getServer().lastTickLengths;
 		double[] tps = new double[4];
 		for(int i = 0; i < (ltps.length > 3 ? 3 : ltps.length); i++)
 			tps[i] = ltps[i];
