@@ -42,7 +42,6 @@ public class FabricWorld extends World {
 		return getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Entity> getEntities() {
 		List<Entity> list = new ArrayList<>();

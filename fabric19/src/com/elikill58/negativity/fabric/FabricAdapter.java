@@ -29,7 +29,7 @@ import com.elikill58.negativity.fabric.impl.inventory.FabricInventory;
 import com.elikill58.negativity.fabric.impl.item.FabricItemBuilder;
 import com.elikill58.negativity.fabric.impl.item.FabricItemRegistrar;
 import com.elikill58.negativity.fabric.impl.plugin.FabricExternalPlugin;
-import com.elikill58.negativity.fabric.nms.FabricVersionAdapter;
+import com.elikill58.negativity.fabric.nms.Fabric_1_19;
 import com.elikill58.negativity.universal.Adapter;
 import com.elikill58.negativity.universal.Platform;
 import com.elikill58.negativity.universal.Scheduler;
@@ -62,6 +62,7 @@ public class FabricAdapter extends Adapter {
 	private final NegativityAccountManager accountManager = new SimpleAccountManager.Server(FabricNegativity::sendPluginMessage);
 	private final TranslationProviderFactory translationProviderFactory;
 	private final FabricItemRegistrar itemRegistrar;
+	private final VersionAdapter<?> versionAdapter;
 	private final Version serverVersion;
 	private final Scheduler scheduler;
 	
@@ -73,6 +74,7 @@ public class FabricAdapter extends Adapter {
 		this.itemRegistrar = new FabricItemRegistrar();
 		this.serverVersion = Version.getVersionByName(getVersion());
 		this.scheduler = new FabricScheduler();
+		this.versionAdapter = new Fabric_1_19();
 	}
 	
 	@Override
@@ -300,7 +302,7 @@ public class FabricAdapter extends Adapter {
 	
 	@Override
 	public VersionAdapter<?> getVersionAdapter() {
-		return FabricVersionAdapter.getVersionAdapter();
+		return versionAdapter;
 	}
 	
 	@Override

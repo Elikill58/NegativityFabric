@@ -22,7 +22,6 @@ import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.entity.FabricPlayer;
 import com.elikill58.negativity.fabric.listeners.CommandsExecutorManager;
 import com.elikill58.negativity.fabric.listeners.PlayersListeners;
-import com.elikill58.negativity.fabric.packets.NegativityPacketManager;
 import com.elikill58.negativity.fabric.utils.Utils;
 import com.elikill58.negativity.universal.Adapter;
 import com.elikill58.negativity.universal.Negativity;
@@ -64,7 +63,6 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	private Path configDir;
 	private MinecraftServer server;
-	private NegativityPacketManager packetManager;
 	private CommandDispatcher<ServerCommandSource> dispatcher;
 	private boolean commandLoaded = false;
 	public static Identifier negativityChannel = new Identifier(NegativityMessagesManager.CHANNEL_ID),
@@ -107,9 +105,8 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public void onGameStart(MinecraftServer srv) {
 		this.server = srv;
-		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor);
+		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor, FabricEntityManager::getPlayer);
 		Negativity.loadNegativity();
-		packetManager = new NegativityPacketManager(this);
 
 		ServerPlayNetworking.registerGlobalReceiver(fmlChannel, new FmlRawDataListener());
 		ServerPlayNetworking.registerGlobalReceiver(negativityChannel, new ProxyCompanionListener());
@@ -185,10 +182,6 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public Path getDataFolder() {
 		return configDir;
-	}
-
-	public NegativityPacketManager getPacketManager() {
-		return packetManager;
 	}
 
 	public static List<ServerPlayerEntity> getOnlinePlayers() {
