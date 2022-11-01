@@ -107,7 +107,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public void onGameStart(MinecraftServer srv) {
 		this.server = srv;
-		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor, FabricEntityManager::getPlayer);
+		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor);
 		Negativity.loadNegativity();
 
 		ServerPlayNetworking.registerGlobalReceiver(fmlChannel, new FmlRawDataListener());
