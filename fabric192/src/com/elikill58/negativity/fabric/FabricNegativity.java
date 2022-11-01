@@ -21,6 +21,7 @@ import com.elikill58.negativity.api.yaml.Configuration;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.entity.FabricPlayer;
 import com.elikill58.negativity.fabric.listeners.CommandsExecutorManager;
+import com.elikill58.negativity.fabric.listeners.PacketListeners;
 import com.elikill58.negativity.fabric.listeners.PlayersListeners;
 import com.elikill58.negativity.fabric.utils.Utils;
 import com.elikill58.negativity.universal.Adapter;
@@ -83,6 +84,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		CommandRegistrationCallback.EVENT.register(this::loadCommands);
 
 		PlayersListeners.register();
+		new PacketListeners();
 		ServerPlayConnectionEvents.DISCONNECT.register(this::onLeave);
 
 		NegativityAccountStorage.setDefaultStorage("file");
