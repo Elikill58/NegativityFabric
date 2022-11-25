@@ -205,6 +205,10 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 	public boolean isFlying() {
 		return entity.getAbilities().flying;
 	}
+	
+	public void setFlying(boolean b) {
+		entity.getAbilities().flying = b;
+	}
 
 	@Override
 	public void sendPluginMessage(String channelId, byte[] writeMessage) {
