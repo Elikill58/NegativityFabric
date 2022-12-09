@@ -9,6 +9,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.elikill58.negativity.api.GameMode;
+import com.elikill58.negativity.api.entity.AbstractPlayer;
+import com.elikill58.negativity.api.entity.BoundingBox;
 import com.elikill58.negativity.api.entity.Entity;
 import com.elikill58.negativity.api.entity.EntityType;
 import com.elikill58.negativity.api.entity.Player;
@@ -16,7 +18,7 @@ import com.elikill58.negativity.api.inventory.Inventory;
 import com.elikill58.negativity.api.inventory.PlayerInventory;
 import com.elikill58.negativity.api.item.ItemStack;
 import com.elikill58.negativity.api.location.Location;
-import com.elikill58.negativity.api.location.World;
+import com.elikill58.negativity.api.location.Vector;
 import com.elikill58.negativity.api.potion.PotionEffect;
 import com.elikill58.negativity.api.potion.PotionEffectType;
 import com.elikill58.negativity.fabric.FabricNegativity;
@@ -26,12 +28,9 @@ import com.elikill58.negativity.fabric.impl.inventory.FabricPlayerInventory;
 import com.elikill58.negativity.fabric.impl.inventory.NegativityScreenHandlerFactory;
 import com.elikill58.negativity.fabric.impl.item.FabricItemStack;
 import com.elikill58.negativity.fabric.impl.location.FabricLocation;
-import com.elikill58.negativity.fabric.impl.location.FabricWorld;
 import com.elikill58.negativity.fabric.utils.LocationUtils;
 import com.elikill58.negativity.fabric.utils.Utils;
 import com.elikill58.negativity.universal.Adapter;
-import com.elikill58.negativity.universal.Version;
-import com.elikill58.negativity.universal.multiVersion.PlayerVersionManager;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -40,40 +39,17 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 
-public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Player {
+public class FabricPlayer extends AbstractPlayer implements Player {
 
-	private int protocolVersion = 0;
-	private Version playerVersion;
+	private ServerPlayerEntity entity;
 
 	public FabricPlayer(ServerPlayerEntity p) {
-		super(p);
-		this.protocolVersion = PlayerVersionManager.getPlayerProtocolVersion(this);
-	}
-
-	@Override
-	public Version getPlayerVersion() {
-		return isVersionSet() ? playerVersion : (playerVersion = Version.getVersionByProtocolID(getProtocolVersion()));
-	}
-	
-	@Override
-	public void setPlayerVersion(Version version) {
-		playerVersion = version;
-		protocolVersion = version.getFirstProtocolNumber();
-	}
-	
-	private boolean isVersionSet() {
-		return playerVersion != null && !playerVersion.equals(Version.HIGHER);
-	}
-	
-	@Override
-	public int getProtocolVersion() {
-		return protocolVersion;
-	}
-	
-	@Override
-	public void setProtocolVersion(int protocolVersion) {
-		this.protocolVersion = protocolVersion;
+		this.entity = p;
+		this.location = FabricLocation.toCommon(p.getWorld(), p.getPos());
+		init();
 	}
 
 	@Override
@@ -149,11 +125,6 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 	@Override
 	public int getPing() {
 		return entity.pingMilliseconds;
-	}
-
-	@Override
-	public World getWorld() {
-		return World.getWorld(entity.getWorld().asString(), a -> new FabricWorld(entity.getWorld()));
 	}
 
 	@Override
@@ -416,10 +387,39 @@ public class FabricPlayer extends FabricEntity<ServerPlayerEntity> implements Pl
 	}
 	
 	@Override
+	public int getEntityId() {
+		return entity.getId();
+	}
+	
+	@Override
+	public BoundingBox getBoundingBox() {
+		Box box = entity.getBoundingBox();
+		if(box == null)
+			return null;
+		return new BoundingBox(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Player)) {
 			return false;
 		}
 		return Player.isSamePlayer(this, (Player) obj);
+	}
+
+	@Override
+	public Object getDefault() {
+		return entity;
+	}
+
+	@Override
+	public Vector getTheoricVelocity() {
+		Vec3d vel = entity.getVelocity();
+		return new Vector(vel.x, vel.y, vel.z);
+	}
+
+	@Override
+	public void setVelocity(Vector vel) {
+		entity.setVelocity(new Vec3d(vel.getX(), vel.getY(), vel.getZ()));
 	}
 }

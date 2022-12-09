@@ -91,21 +91,10 @@ public class FabricEntity<E extends Entity> extends AbstractEntity {
 		Vec3d vec = entity.getRotationVector();
 		return new Vector(vec.getX(), vec.getY(), vec.getZ());
 	}
-
-	@Override
-	public Vector getTheoricVelocity() {
-		Vec3d vel = entity.getVelocity();
-		return new Vector(vel.getX(), vel.getY(), vel.getZ());
-	}
-
-	@Override
-	public void setVelocity(Vector vel) {
-		entity.setVelocity(new Vec3d(vel.getX(), vel.getY(), vel.getZ()));
-	}
 	
 	@Override
-	public String getEntityId() {
-		return entity.getUuid().toString();
+	public int getEntityId() {
+		return entity.getId();
 	}
 	
 	@Override

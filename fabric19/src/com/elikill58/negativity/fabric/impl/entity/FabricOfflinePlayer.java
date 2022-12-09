@@ -52,8 +52,8 @@ public class FabricOfflinePlayer extends AbstractEntity implements OfflinePlayer
 	}
 	
 	@Override
-	public String getEntityId() {
-		return String.valueOf(u.getId());
+	public int getEntityId() {
+		return u.getId();
 	}
 	
 	@Override

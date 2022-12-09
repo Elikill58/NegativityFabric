@@ -3,6 +3,7 @@ package com.elikill58.negativity.fabric;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -11,7 +12,6 @@ import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 
-import com.elikill58.negativity.api.entity.FakePlayer;
 import com.elikill58.negativity.api.entity.OfflinePlayer;
 import com.elikill58.negativity.api.entity.Player;
 import com.elikill58.negativity.api.inventory.Inventory;
@@ -20,7 +20,7 @@ import com.elikill58.negativity.api.item.ItemBuilder;
 import com.elikill58.negativity.api.item.ItemRegistrar;
 import com.elikill58.negativity.api.item.ItemStack;
 import com.elikill58.negativity.api.item.Material;
-import com.elikill58.negativity.api.location.Location;
+import com.elikill58.negativity.api.location.World;
 import com.elikill58.negativity.api.packets.nms.VersionAdapter;
 import com.elikill58.negativity.api.plugin.ExternalPlugin;
 import com.elikill58.negativity.api.yaml.Configuration;
@@ -28,6 +28,7 @@ import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.inventory.FabricInventory;
 import com.elikill58.negativity.fabric.impl.item.FabricItemBuilder;
 import com.elikill58.negativity.fabric.impl.item.FabricItemRegistrar;
+import com.elikill58.negativity.fabric.impl.location.FabricWorld;
 import com.elikill58.negativity.fabric.impl.plugin.FabricExternalPlugin;
 import com.elikill58.negativity.fabric.nms.Fabric_1_19;
 import com.elikill58.negativity.universal.Adapter;
@@ -233,14 +234,10 @@ public class FabricAdapter extends Adapter {
 	public @Nullable OfflinePlayer getOfflinePlayer(UUID uuid) {
 		return getPlayer(uuid);
 	}
-	
-	@Override
-	public FakePlayer createFakePlayer(Location loc, String name) {
-		return null; // TODO add fake players
-	}
 
 	@Override
 	public boolean hasPlugin(String name) {
+		name = name.toLowerCase(Locale.ROOT);
 		try {
 			return plugin.getServer().getResourceManager().getResource(new Identifier(name)).isPresent();
 		} catch (InvalidIdentifierException e) {
@@ -250,6 +247,7 @@ public class FabricAdapter extends Adapter {
 
 	@Override
 	public ExternalPlugin getPlugin(String name) {
+		name = name.toLowerCase(Locale.ROOT);
 		try {
 			Optional<Resource> opt = plugin.getServer().getResourceManager().getResource(new Identifier(name));
 			if(opt.isPresent())
@@ -308,5 +306,11 @@ public class FabricAdapter extends Adapter {
 	@Override
 	public List<String> getAllPlugins() {
 		return new ArrayList<>(plugin.getServer().getResourceManager().getAllNamespaces());
+	}
+
+	@Override
+	public World getServerWorld(Player p) {
+		ServerPlayerEntity se = plugin.getServer().getPlayerManager().getPlayer(p.getUniqueId());
+		return World.getWorld(se.getWorld().asString(), (a) -> new FabricWorld(se.getWorld()));
 	}
 }
