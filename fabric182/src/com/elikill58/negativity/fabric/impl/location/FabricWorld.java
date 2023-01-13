@@ -1,10 +1,21 @@
 package com.elikill58.negativity.fabric.impl.location;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.elikill58.negativity.api.block.Block;
+import com.elikill58.negativity.api.entity.Entity;
 import com.elikill58.negativity.api.location.Difficulty;
 import com.elikill58.negativity.api.location.World;
 import com.elikill58.negativity.fabric.impl.block.FabricBlock;
+import com.elikill58.negativity.fabric.impl.entity.FabricEntity;
+import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
+import com.elikill58.negativity.fabric.impl.entity.FabricTypeFilter;
+import com.elikill58.negativity.universal.utils.ReflectionUtils;
 
+import net.minecraft.server.world.ServerEntityManager;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 public class FabricWorld extends World {
@@ -39,6 +50,30 @@ public class FabricWorld extends World {
 	@Override
 	public int getMinHeight() {
 		return -64;
+	}
+
+	@Override
+	public List<Entity> getEntities() {
+		List<Entity> list = new ArrayList<>();
+		w.getProfiler().visit("getEntities");
+		try {
+			ServerEntityManager<net.minecraft.entity.Entity> entityManager = ReflectionUtils.getFirstWith(w, ServerWorld.class, ServerEntityManager.class);
+			entityManager.getLookup().forEach(FabricTypeFilter.getFilter(), e -> list.add(FabricEntityManager.getEntity(e)));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public Optional<Entity> getEntityById(int id) {
+		net.minecraft.entity.Entity e = w.getEntityById(id);
+		return e == null ? Optional.empty() : Optional.of(new FabricEntity<>(e));
+	}
+
+	@Override
+	public boolean isChunkLoaded(int x, int z) {
+		return w.isChunkLoaded(x, z);
 	}
 
 	@Override

@@ -25,12 +25,14 @@ public class FabricExternalPlugin extends ExternalPlugin {
 	}
 
 	@Override
+	public String getVersion() {
+		return "?"; // TODO fix it
+	}
+
+	@Override
 	public Object getDefault() {
-		// Let's assume the instance exists
 		// Let's assume the instance exists
 		//noinspection OptionalGetWithoutIsPresent
 		return pl;
 	}
-	
-	
 }
