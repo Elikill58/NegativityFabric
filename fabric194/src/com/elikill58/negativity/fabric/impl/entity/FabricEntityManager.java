@@ -17,7 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class FabricEntityManager {
 
 	public static com.elikill58.negativity.api.entity.@Nullable Player getPlayer(@Nullable ServerPlayerEntity p){
-		return p == null ? null : NegativityPlayer.getPlayer(p.getUuid(), () -> new FabricPlayer(p));
+		return p == null ? null : NegativityPlayer.getNegativityPlayer(p.getUuid(), () -> new FabricPlayer(p)).getPlayer();
 	}
 	
 	public static @Nullable Entity getEntity(net.minecraft.entity.@Nullable Entity e) {
