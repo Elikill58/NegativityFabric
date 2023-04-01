@@ -83,8 +83,6 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onGameStop);
 		CommandRegistrationCallback.EVENT.register(this::loadCommands);
 
-		PlayersListeners.register();
-		new PacketListeners();
 		ServerPlayConnectionEvents.DISCONNECT.register(this::onLeave);
 
 		NegativityAccountStorage.setDefaultStorage("file");
@@ -107,6 +105,10 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 
 	public void onGameStart(MinecraftServer srv) {
 		this.server = srv;
+
+		PlayersListeners.register();
+		new PacketListeners();
+		
 		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor);
 		Negativity.loadNegativity();
 
