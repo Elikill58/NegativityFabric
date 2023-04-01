@@ -1,5 +1,7 @@
 package com.elikill58.negativity.fabric.mixin;
 
+import java.util.Set;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +26,7 @@ public abstract class MixinServerPlayNetworkHandler {
 	@Shadow public ServerPlayerEntity player;
 	
 	@Inject(at = @At(value = "HEAD"), method = "requestTeleport(DDDFFLjava/util/Set;)V")
-	private void onTeleport(double x, double y, double z, float yaw, float pitch, CallbackInfo ci) {
+	private void onTeleport(double x, double y, double z, float yaw, float pitch, Set<Object> flags, CallbackInfo ci) {
 		World w = player.getWorld();
 		EventManager.callEvent(new PlayerTeleportEvent(FabricEntityManager.getPlayer(player),
 				FabricLocation.toCommon(w, player.getPos()), FabricLocation.toCommon(w, x, y, z)));
