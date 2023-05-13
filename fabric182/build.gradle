@@ -11,7 +11,7 @@ sourceSets {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-archivesBaseName = 'NegativityFabric-182'
+archivesBaseName = 'NegativityFabric-18.2'
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
