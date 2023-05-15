@@ -31,7 +31,8 @@ public class PacketListeners extends NettyPacketListener {
 	@Override
 	public Channel getChannel(Player p) {
 		try {
-			return ReflectionUtils.getFirstWith(((ServerPlayerEntity) p.getDefault()).networkHandler.getConnectionAddress(), ClientConnection.class, Channel.class);
+			ClientConnection co = ReflectionUtils.getFirstWith(((ServerPlayerEntity) p.getDefault()).networkHandler, ServerPlayNetworkHandler.class, ClientConnection.class);
+			return ReflectionUtils.getFirstWith(co, ClientConnection.class, Channel.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
