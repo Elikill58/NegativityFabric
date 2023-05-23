@@ -62,14 +62,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 			super.heal(amount);
 	}
 
-	@Override
-	public void consumeItem() {
-		if (!this.activeItemStack.isEmpty() && isUsingItem()) {
-			PlayerItemConsumeEvent event = new PlayerItemConsumeEvent(FabricEntityManager.getPlayer(getPlayer()),
-					new FabricItemStack(activeItemStack));
-			EventManager.callEvent(event);
-			if (!event.isCancelled())
-				super.consumeItem();
-		}
+	@Inject(method = "consumeItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;consumeItem()V"))
+	private void onConsumeItem(CallbackInfo ci) {
+		PlayerItemConsumeEvent event = new PlayerItemConsumeEvent(FabricEntityManager.getPlayer(getPlayer()),
+				new FabricItemStack(activeItemStack));
+		EventManager.callEvent(event);
+		if (!event.isCancelled())
+			super.consumeItem();
 	}
 }
