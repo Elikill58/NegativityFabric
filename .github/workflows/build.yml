@@ -1,5 +1,7 @@
 name: Build
-on: [ pull_request, push ]
+on: 
+  watch:
+    types: [started]
 
 jobs:
   build:
