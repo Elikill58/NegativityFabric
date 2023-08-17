@@ -243,7 +243,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
 				PacketByteBuf buf, PacketSender responseSender) {
 			byte[] rawData = new byte[buf.capacity()];
-			buf.readBytes(rawData)
+			buf.readBytes(rawData);
 			HashMap<String, String> playerMods = NegativityPlayer.getNegativityPlayer(player.getUuid(),
 					() -> new FabricPlayer(player)).mods;
 			playerMods.clear();
@@ -257,7 +257,7 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
 				PacketByteBuf buf, PacketSender responseSender) {
 			byte[] rawData = new byte[buf.capacity()];
-			buf.readBytes(rawData)
+			buf.readBytes(rawData);
 			com.elikill58.negativity.api.events.EventManager
 					.callEvent(new GameChannelNegativityMessageEvent(FabricEntityManager.getPlayer(player), rawData));
 		}
