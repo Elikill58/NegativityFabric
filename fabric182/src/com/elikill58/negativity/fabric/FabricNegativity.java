@@ -26,7 +26,6 @@ import com.elikill58.negativity.fabric.listeners.PlayersListeners;
 import com.elikill58.negativity.fabric.utils.Utils;
 import com.elikill58.negativity.universal.Adapter;
 import com.elikill58.negativity.universal.Negativity;
-import com.elikill58.negativity.universal.Stats;
 import com.elikill58.negativity.universal.account.NegativityAccountManager;
 import com.elikill58.negativity.universal.ban.BanManager;
 import com.elikill58.negativity.universal.detections.Cheat.CheatHover;
@@ -117,8 +116,6 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		if(dispatcher != null && !commandLoaded) {
 			loadCommandsFinal();
 		}
-		
-		Stats.sendStartupStats(srv.getServerPort());
 	}
 
 	private void loadCommands(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {

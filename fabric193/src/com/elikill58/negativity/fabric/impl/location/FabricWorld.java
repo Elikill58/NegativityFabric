@@ -3,10 +3,12 @@ package com.elikill58.negativity.fabric.impl.location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.elikill58.negativity.api.block.Block;
 import com.elikill58.negativity.api.entity.Entity;
 import com.elikill58.negativity.api.location.Difficulty;
+import com.elikill58.negativity.api.location.Location;
 import com.elikill58.negativity.api.location.World;
 import com.elikill58.negativity.fabric.impl.block.FabricBlock;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntity;
@@ -73,6 +75,11 @@ public class FabricWorld extends World {
 	@Override
 	public boolean isChunkLoaded(int x, int z) {
 		return w.isChunkLoaded(x, z);
+	}
+
+	@Override
+	public List<Entity> getNearEntity(Location loc, double distance) {
+		return w.getClosestPlayer(loc.getX(), loc.getY(), loc.getZ(), distance, false).getPassengerList().stream().map(FabricEntityManager::getEntity).collect(Collectors.toList());
 	}
 
 	@Override
