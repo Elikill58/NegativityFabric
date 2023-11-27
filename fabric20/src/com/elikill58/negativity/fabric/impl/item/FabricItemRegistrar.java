@@ -2,6 +2,8 @@ package com.elikill58.negativity.fabric.impl.item;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -19,6 +21,7 @@ import net.minecraft.util.InvalidIdentifierException;
 public class FabricItemRegistrar extends ItemRegistrar {
 
 	private final HashMap<String, Material> cache = new HashMap<>();
+	private final List<String> alreadyAlertNotFound = new ArrayList<>();
 
 	@Override
 	public @Nullable Material get(String id, String... aliases) {
@@ -39,14 +42,16 @@ public class FabricItemRegistrar extends ItemRegistrar {
 					return aliasedMaterial;
 				}
 			}
-			
-			StringJoiner sj = new StringJoiner(", ", " : ", "");
-			for(String alias : parsedAliases) {
-				if(alias.equals(Materials.IGNORE_KEY))
-					return null; // ignore not found item
-				sj.add(alias + " (" + parse(alias) + ")");
+			if(!alreadyAlertNotFound.contains(id)) {
+				StringJoiner sj = new StringJoiner(", ", " : ", "");
+				for(String alias : parsedAliases) {
+					if(alias.equals(Materials.IGNORE_KEY))
+						return null; // ignore not found item
+					sj.add(alias + " (" + parse(alias) + ")");
+				}
+				Adapter.getAdapter().getLogger().info("[FabricItemRegistrar] Cannot find material " + id + sj);
+				alreadyAlertNotFound.add(id);
 			}
-			Adapter.getAdapter().getLogger().info("[FabricItemRegistrar] Cannot find material " + id + sj);
 			return null;
 		});
 	}
