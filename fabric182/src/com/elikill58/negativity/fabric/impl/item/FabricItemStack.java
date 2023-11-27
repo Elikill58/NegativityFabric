@@ -4,7 +4,6 @@ import com.elikill58.negativity.api.item.Enchantment;
 import com.elikill58.negativity.api.item.Material;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
 
 public class FabricItemStack extends com.elikill58.negativity.api.item.ItemStack {
 	
@@ -21,7 +20,7 @@ public class FabricItemStack extends com.elikill58.negativity.api.item.ItemStack
 
 	@Override
 	public Material getType() {
-		return FabricItemRegistrar.getInstance().get(Registry.ITEM.getKey(item.getItem()).orElseThrow().getValue().getPath());
+		return new FabricMaterial(item.getItem());
 	}
 
 	@Override

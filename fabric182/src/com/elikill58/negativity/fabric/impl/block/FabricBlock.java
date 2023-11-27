@@ -4,13 +4,12 @@ import java.util.Locale;
 
 import com.elikill58.negativity.api.block.Block;
 import com.elikill58.negativity.api.block.BlockFace;
-import com.elikill58.negativity.api.item.ItemRegistrar;
 import com.elikill58.negativity.api.item.Material;
 import com.elikill58.negativity.api.location.Location;
+import com.elikill58.negativity.fabric.impl.item.FabricMaterial;
 import com.elikill58.negativity.fabric.impl.location.FabricLocation;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class FabricBlock extends Block {
@@ -27,8 +26,7 @@ public class FabricBlock extends Block {
 
 	@Override
 	public Material getType() {
-		String id = Registry.BLOCK.getKey(block).orElseThrow().getValue().getPath();
-		return ItemRegistrar.getInstance().get(id);
+		return new FabricMaterial(block);
 	}
 
 	@Override
