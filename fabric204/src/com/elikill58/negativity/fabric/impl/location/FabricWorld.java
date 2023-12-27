@@ -1,6 +1,7 @@
 package com.elikill58.negativity.fabric.impl.location;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import com.elikill58.negativity.fabric.impl.entity.FabricEntity;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.universal.utils.ReflectionUtils;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerEntityManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -79,7 +81,8 @@ public class FabricWorld extends World {
 
 	@Override
 	public List<Entity> getNearEntity(Location loc, double distance) {
-		return w.getClosestPlayer(loc.getX(), loc.getY(), loc.getZ(), distance, false).getPassengerList().stream().map(FabricEntityManager::getEntity).collect(Collectors.toList());
+		PlayerEntity cible = w.getClosestPlayer(loc.getX(), loc.getY(), loc.getZ(), distance, false);
+		return cible == null ? Collections.emptyList() : cible.getPassengerList().stream().map(FabricEntityManager::getEntity).collect(Collectors.toList());
 	}
 
 	@Override
