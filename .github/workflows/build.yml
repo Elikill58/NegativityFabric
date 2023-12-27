@@ -13,7 +13,7 @@ jobs:
       - name: Grant execute permission for all runners
         run: chmod +x gradlew
       - name: build
-        run: ./gradlew :fabric204:build
+        run: ./gradlew build
       
       # Upload part
       - uses: actions/setup-node@v3
