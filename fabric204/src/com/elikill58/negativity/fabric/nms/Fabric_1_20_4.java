@@ -10,10 +10,10 @@ import io.netty.channel.Channel;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class Fabric_1_20 extends VersionAdapter<ServerPlayerEntity> {
+public class Fabric_1_20_4 extends VersionAdapter<ServerPlayerEntity> {
 
-	public Fabric_1_20() {
-		super(Version.V1_20);
+	public Fabric_1_20_4() {
+		super(Version.V1_20_4);
 	}
 
 	@Override

@@ -2,9 +2,11 @@ package com.elikill58.negativity.fabric;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,12 +16,17 @@ import org.slf4j.LoggerFactory;
 
 import com.elikill58.negativity.api.NegativityPlayer;
 import com.elikill58.negativity.api.entity.Player;
+import com.elikill58.negativity.api.events.channel.GameChannelNegativityMessageEvent;
 import com.elikill58.negativity.api.yaml.Configuration;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
+import com.elikill58.negativity.fabric.impl.entity.FabricPlayer;
 import com.elikill58.negativity.fabric.listeners.CommandsExecutorManager;
 import com.elikill58.negativity.fabric.listeners.PacketListeners;
 import com.elikill58.negativity.fabric.listeners.PlayersListeners;
+import com.elikill58.negativity.fabric.payload.BungeecordSendToServerMessagePayload;
+import com.elikill58.negativity.fabric.payload.FMLMessagePayload;
 import com.elikill58.negativity.fabric.payload.NegativityMessagePayload;
+import com.elikill58.negativity.fabric.utils.Utils;
 import com.elikill58.negativity.universal.Adapter;
 import com.elikill58.negativity.universal.Negativity;
 import com.elikill58.negativity.universal.account.NegativityAccountManager;
@@ -37,10 +44,9 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.Context;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayPayloadHandler;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.CustomPayload.Id;
@@ -60,8 +66,10 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 	private MinecraftServer server;
 	private CommandDispatcher<ServerCommandSource> dispatcher;
 	private boolean commandLoaded = false;
-	public static final Id<CustomPayload> ID_NEGATIVITY = CustomPayload.id(NegativityMessagesManager.CHANNEL_ID),
-			ID_FML = CustomPayload.id("fml:hs"), ID_BUNGEECORD = CustomPayload.id("bungeecord");
+	public static final Id<NegativityMessagePayload> ID_NEGATIVITY = CustomPayload
+			.id(NegativityMessagesManager.CHANNEL_ID);
+	public static final Id<FMLMessagePayload> ID_FML = CustomPayload.id("fml:hs");
+	public static final Id<BungeecordSendToServerMessagePayload> ID_BUNGEECORD = CustomPayload.id("bungeecord");
 
 	@Override
 	public void onInitializeServer() {
@@ -107,8 +115,22 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 		GlobalFabricNegativity.load(srv::getTicks, FabricEntityManager::getExecutor);
 		Negativity.loadNegativity();
 
-		ServerPlayNetworking.registerGlobalReceiver(ID_FML, new FmlRawDataListener());
-		ServerPlayNetworking.registerGlobalReceiver(ID_NEGATIVITY, new ProxyCompanionListener());
+		PayloadTypeRegistry.playS2C().register(ID_NEGATIVITY, NegativityMessagePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(ID_NEGATIVITY, NegativityMessagePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ID_BUNGEECORD, BungeecordSendToServerMessagePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ID_FML, FMLMessagePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(ID_FML, FMLMessagePayload.CODEC);
+
+		ServerPlayNetworking.registerGlobalReceiver(ID_FML, (payload, context) -> {
+			HashMap<String, String> playerMods = NegativityPlayer.getNegativityPlayer(context.player().getUuid(),
+					() -> new FabricPlayer(context.player())).mods;
+			playerMods.clear();
+			playerMods.putAll(Utils.getModsNameVersionFromMessage(new String(payload.content(), StandardCharsets.UTF_8)));
+		});
+		ServerPlayNetworking.registerGlobalReceiver(ID_NEGATIVITY, (payload, context) -> {
+			com.elikill58.negativity.api.events.EventManager.callEvent(new GameChannelNegativityMessageEvent(
+					FabricEntityManager.getPlayer(context.player()), payload.content()));
+		});
 
 		if (dispatcher != null && !commandLoaded) {
 			loadCommandsFinal();
@@ -222,47 +244,5 @@ public class FabricNegativity implements DedicatedServerModInitializer {
 	public static ServerPlayerEntity getFirstOnlinePlayer() {
 		Collection<ServerPlayerEntity> onlinePlayers = getInstance().getServer().getPlayerManager().getPlayerList();
 		return onlinePlayers.isEmpty() ? null : onlinePlayers.iterator().next();
-	}
-
-	private static class FmlRawDataListener implements PlayPayloadHandler {
-
-		/*
-		 * @Override public void receive(MinecraftServer server, ServerPlayerEntity
-		 * player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender
-		 * responseSender) { byte[] rawData = new byte[buf.capacity()];
-		 * buf.readBytes(rawData); HashMap<String, String> playerMods =
-		 * NegativityPlayer.getNegativityPlayer(player.getUuid(), () -> new
-		 * FabricPlayer(player)).mods; playerMods.clear();
-		 * playerMods.putAll(Utils.getModsNameVersionFromMessage(new String(rawData,
-		 * StandardCharsets.UTF_8))); }
-		 */
-
-		@Override
-		public void receive(CustomPayload payload, Context context) {
-
-		}
-	}
-
-	private static class ProxyCompanionListener implements PlayPayloadHandler {
-
-		/*
-		 * @Override public void receive(MinecraftServer server, ServerPlayerEntity
-		 * player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender
-		 * responseSender) { byte[] rawData = buf.readBytes(buf.capacity()).array();
-		 * com.elikill58.negativity.api.events.EventManager .callEvent(new
-		 * GameChannelNegativityMessageEvent(FabricEntityManager.getPlayer(player),
-		 * rawData)); }
-		 */
-
-		@Override
-		public void receive(CustomPayload payload, Context context) {
-			/*
-			 * ServerPlayerEntity player = context.player(); byte[] rawData =
-			 * buf.readBytes(buf.capacity()).array();
-			 * com.elikill58.negativity.api.events.EventManager .callEvent(new
-			 * GameChannelNegativityMessageEvent(FabricEntityManager.getPlayer(player),
-			 * rawData));
-			 */
-		}
 	}
 }

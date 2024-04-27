@@ -131,7 +131,10 @@ public class FabricItemBuilder extends ItemBuilder {
 	@Override
 	public ItemBuilder addToLore(String... loreToAdd) {
 		// Fix getting lore
-		return lore(loreToAdd);
+		LoreComponent lore = item.get(DataComponentTypes.LORE);
+		Arrays.asList(loreToAdd).stream().map(Text::of).forEach(lore::with);
+		item.set(DataComponentTypes.LORE, lore);
+		return this;
 	}
 
 	@Override
