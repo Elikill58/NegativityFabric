@@ -31,8 +31,7 @@ public class FabricItemStack extends com.elikill58.negativity.api.item.ItemStack
 	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public boolean hasEnchant(Enchantment enchant) {
-		// TODO fix contains & remove enchant
-		return item.hasEnchantments() && item.getEnchantments().contains(getEnchantLevel(enchant));
+		return item.hasEnchantments() && item.getEnchantments().contains(enchant.getId());
 	}
 
 	@Override

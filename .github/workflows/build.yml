@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 21
       - name: Grant execute permission for all runners
         run: chmod +x gradlew
       - name: build

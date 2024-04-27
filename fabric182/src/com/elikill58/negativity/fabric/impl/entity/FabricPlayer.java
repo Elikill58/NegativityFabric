@@ -176,7 +176,8 @@ public class FabricPlayer extends AbstractPlayer implements Player {
 	public boolean isFlying() {
 		return entity.getAbilities().flying;
 	}
-	
+
+	@Override
 	public void setFlying(boolean b) {
 		entity.getAbilities().flying = b;
 	}

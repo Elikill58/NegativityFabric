@@ -11,4 +11,4 @@ pluginManagement {
 
 rootProject.name = 'NegativityFabric'
 
-include 'fabric182', 'fabric19', 'fabric192', 'fabric193', 'fabric194', 'fabric20', 'fabric204'
+include 'fabric182', 'fabric19', 'fabric192', 'fabric193', 'fabric194', 'fabric20', 'fabric204', 'fabric205'

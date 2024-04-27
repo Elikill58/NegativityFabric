@@ -33,7 +33,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 	}
 	
 	@Shadow public ServerPlayNetworkHandler networkHandler;
-	
+
+	@Override
 	@Shadow public abstract OptionalInt openHandledScreen(@Nullable NamedScreenHandlerFactory factory);
 	
 	public ServerPlayerEntity getPlayer() {
