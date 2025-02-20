@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.6-SNAPSHOT' apply false
+    id 'fabric-loom' version '1.10.1' apply false
 }
 
 tasks.named('javadoc') {
@@ -15,21 +15,21 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            name = 'jitpack'
-            url = 'https://jitpack.io/'
-        }
-        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Elikill'
+            url = 'https://repo.eliapp.fr:8081/repository/snapshots'
         }
     }
     
     dependencies {
-        compileOnly 'com.github.Elikill58:Negativity:v2-SNAPSHOT'
+        compileOnly 'com.github.elikill58:Negativity:v2-SNAPSHOT'
         compileOnly 'org.checkerframework:checker-qual:3.7.0'
     }
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'

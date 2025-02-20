@@ -9,7 +9,7 @@ sourceSets {
     }
 }
 
-archivesBaseName = 'NegativityFabric-19.4'
+archivesBaseName = 'NegativityFabric-20.6'
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

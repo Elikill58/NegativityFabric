@@ -9,8 +9,6 @@ sourceSets {
     }
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 archivesBaseName = 'NegativityFabric-20'
 
 dependencies {
