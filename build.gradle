@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.10.1' apply false
+    id 'fabric-loom' version '1.14.8' apply false
 }
 
 tasks.named('javadoc') {
@@ -37,5 +37,14 @@ subprojects {
 
     tasks.withType(ProcessResources) {
         filteringCharset = 'UTF-8'
+    }
+    
+    base {
+        archivesName = project.name.replaceFirst(
+	        /^fabric(\d{2})(\d{2})?$/,
+	        { full, major, minor ->
+	            minor ? "NegativityFabric-1.${major}.${minor}" : "NegativityFabric-1.${major}"
+	        }
+		)
     }
 }
