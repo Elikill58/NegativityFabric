@@ -52,9 +52,7 @@ jobs:
               let filesDir = "./" + fabricVersion + "/build/libs";
               let files = [];
               for(let build of getFiles(filesDir)) {
-                if(!build.endsWith("-sources.jar")) {
-                  files.push(filesDir + "/" + build);
-                }
+                files.push(filesDir + "/" + build);
               }
               console.log("Uploading version", "1." + visual, "and files", files);
               await artifact.uploadArtifact(

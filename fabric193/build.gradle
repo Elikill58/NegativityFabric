@@ -33,7 +33,3 @@ processResources {
         expand props
     }
 }
-
-java {
-    withSourcesJar()
-}
