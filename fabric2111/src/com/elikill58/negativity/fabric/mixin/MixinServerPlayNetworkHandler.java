@@ -15,6 +15,7 @@ import com.elikill58.negativity.api.events.player.PlayerTeleportEvent;
 import com.elikill58.negativity.fabric.impl.entity.FabricEntityManager;
 import com.elikill58.negativity.fabric.impl.location.FabricLocation;
 
+import net.minecraft.entity.EntityPosition;
 import net.minecraft.network.packet.c2s.play.PlayerInteractItemC2SPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,11 +26,11 @@ public abstract class MixinServerPlayNetworkHandler {
 
 	@Shadow public ServerPlayerEntity player;
 	
-	@Inject(at = @At(value = "HEAD"), method = "requestTeleport(DDDFFLjava/util/Set;)V")
-	private void onTeleport(double x, double y, double z, float yaw, float pitch, Set<Object> flags, CallbackInfo ci) {
+	@Inject(at = @At(value = "HEAD"), method = "requestTeleport(Lnet/minecraft/entity/EntityPosition;Ljava/util/Set;)V")
+	private void onTeleport(EntityPosition position, Set<Object> flags, CallbackInfo ci) {
 		World w = player.getEntityWorld();
 		EventManager.callEvent(new PlayerTeleportEvent(FabricEntityManager.getPlayer(player),
-				FabricLocation.toCommon(w, player.getEntityPos()), FabricLocation.toCommon(w, x, y, z)));
+				FabricLocation.toCommon(w, player.getEntityPos()), FabricLocation.toCommon(w, position.position())));
 	}
 
 	@Inject(at = @At(value = "HEAD"), method = "onPlayerInteractItem(Lnet/minecraft/network/packet/c2s/play/PlayerInteractItemC2SPacket;)V", cancellable = true)

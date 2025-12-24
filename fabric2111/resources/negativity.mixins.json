@@ -7,7 +7,7 @@
     "MixinMinecraftServer",
     "MixinScreenHandler",
     "MixinServerPlayerEntity",
-    "MixinServerPlayNetworkHandler"
+	"MixinServerPlayNetworkHandler"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -72,7 +72,7 @@ public class FabricAdapter extends Adapter {
 		this.config = UniversalUtils.loadConfig(new File(getDataFolder(), "config.yml"), "config.yml");
 		this.translationProviderFactory = new NegativityTranslationProviderFactory(sn.getDataFolder().resolve("lang"), "Negativity", "CheatHover");
 		this.itemRegistrar = new FabricItemRegistrar();
-		this.serverVersion = Version.getVersionByProtocolID(sn.getServer().getServerMetadata().version().orElse(ServerMetadata.Version.create()).protocolVersion()); //MinecraftVersion.CURRENT.getProtocolVersion());
+		this.serverVersion = Version.getVersionByProtocolID(ServerMetadata.Version.create().protocolVersion());//sn.getServer().getServerMetadata().version().orElse(ServerMetadata.Version.create()).protocolVersion()); //MinecraftVersion.CURRENT.getProtocolVersion());
 		this.scheduler = new FabricScheduler();
 		this.versionAdapter = new Fabric_1_21();
 	}
@@ -110,7 +110,7 @@ public class FabricAdapter extends Adapter {
 
 	@Override
 	public String getVersion() {
-		return plugin.getServer().getServerMetadata().version().orElse(ServerMetadata.Version.create()).gameVersion();
+		return ServerMetadata.Version.create().gameVersion();
 	}
 	
 	@Override
